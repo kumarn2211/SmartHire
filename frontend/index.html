@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SmartHire - Job Portal</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">SmartHire</div>
+
+        <nav>
+            <a href="#" onclick="showHome(); return false;">Home</a>
+            <a href="#" onclick="showDashboard(); return false;">Dashboard</a>
+            <a href="#" onclick="showSmartJobs(); return false;" id="smartJobsNav" class="hidden">Recommended Jobs</a>
+            <a href="#" onclick="showCareerIntelligence(); return false;" id="careerIntelligenceNav" class="hidden">Career Intelligence</a>
+            <a href="#" onclick="showSmartCandidates(); return false;" id="smartCandidatesNav" class="hidden">Smart Candidates</a>
+            <a href="#" onclick="showRecruiterPipeline(); return false;" id="pipelineNav" class="hidden">Pipeline</a>
+            <a href="#" onclick="showAdminPanel(); return false;" id="adminNavLink" class="hidden">Admin</a>
+        </nav>
+
+        <div id="navUser"></div>
+    </header>
+
+    <main id="app">
+
+        <!-- HOME PAGE -->
+
+        <section id="homePage">
+
+            <div class="hero">
+                <h1>Find Your Dream Job</h1>
+
+                <p>
+                    Connect with opportunities.
+                    Build your career with SmartHire.
+                </p>
+
+                <div class="search-box">
+
+                    <input
+                        id="homeSearch"
+                        type="text"
+                        placeholder="Job title or skill"
+                    >
+
+                    <input
+                        id="homeLocation"
+                        type="text"
+                        placeholder="Location"
+                    >
+
+                    <button onclick="searchHomeJobs()">
+                        Search Jobs
+                    </button>
+
+                </div>
+
+                <button class="secondary-btn"
+                        onclick="showJobs()">
+                    Browse All Jobs
+                </button>
+            </div>
+
+            <div class="features">
+
+                <div class="feature-card">
+                    <h2>Find Jobs</h2>
+                    <p>Search opportunities matching your skills.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h2>Apply Online</h2>
+                    <p>Apply for jobs with your resume.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h2>Hire Talent</h2>
+                    <p>Recruiters can discover qualified candidates.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- JOB LISTING PAGE -->
+
+        <section id="jobsPage" class="hidden">
+
+            <h1>Available Jobs</h1>
+
+            <div class="search-box job-search">
+                <input id="jobSearch" placeholder="Search job title, company or skills">
+                <input id="jobLocation" placeholder="Location">
+                <select id="jobTypeFilter">
+                    <option value="">All job types</option>
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Remote">Remote</option>
+                </select>
+                <select id="jobSort">
+                    <option value="newest">Newest first</option>
+                    <option value="title">Job title A-Z</option>
+                    <option value="company">Company A-Z</option>
+                </select>
+                <button onclick="loadJobs()">Search / Apply Filters</button>
+                <button class="secondary-btn" onclick="resetJobFilters()">Reset</button>
+            </div>
+            <p id="jobResultsInfo" class="job-results-info"></p>
+            <div id="jobsList" class="job-grid"></div>
+            <div id="jobsPagination" class="jobs-pagination"></div>
+
+        </section>
+
+        <!-- LOGIN PAGE -->
+
+        <section id="loginPage" class="hidden">
+
+            <div class="form-card">
+
+                <h1>Login</h1>
+
+                <form id="loginForm">
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Email"
+                        required
+                    >
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Password"
+                        required
+                    >
+
+                    <button type="submit">
+                        Login
+                    </button>
+
+                </form>
+
+                <p>
+                    Don't have an account?
+                    <a href="#" onclick="showRegister()">
+                        Register
+                    </a>
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- REGISTER PAGE -->
+
+        <section id="registerPage" class="hidden">
+
+            <div class="form-card">
+
+                <h1>Create Account</h1>
+
+                <form id="registerForm">
+
+                    <input
+                        type="text"
+                        id="registerName"
+                        placeholder="Full name"
+                        required
+                    >
+
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        placeholder="Email"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="registerPhone"
+                        placeholder="Phone number"
+                    >
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        placeholder="Password (minimum 6 characters)"
+                        minlength="6"
+                        required
+                    >
+
+                    <select id="registerRole" required>
+
+                        <option value="">Select account type</option>
+
+                        <option value="seeker">
+                            Job Seeker
+                        </option>
+
+                        <option value="recruiter">
+                            Recruiter
+                        </option>
+
+                    </select>
+
+                    <button type="submit">
+                        Register
+                    </button>
+
+                </form>
+
+                <p>
+                    Already registered?
+                    <a href="#" onclick="showLogin()">
+                        Login
+                    </a>
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- JOB DETAILS PAGE -->
+
+        <section id="jobDetailsPage" class="hidden">
+
+            <div id="jobDetails"></div>
+
+        </section>
+
+        <!-- SEEKER DASHBOARD -->
+
+        <section id="seekerDashboard" class="hidden">
+
+            <h1>Job Seeker Dashboard</h1>
+            <div class="dashboard-quick-links"><button class="secondary-btn" onclick="showSavedJobs()">Saved Jobs</button><button class="secondary-btn" onclick="showNotifications()">Notifications</button></div>
+
+            <div class="dashboard-card">
+                <h2>My Applications</h2>
+                <div id="myApplications"></div>
+            </div>
+
+            <div class="dashboard-card seeker-interviews-card">
+                <div class="seeker-interviews-header">
+                    <h2>My Interviews</h2>
+                    <button type="button" class="secondary-btn" onclick="loadSeekerInterviews()">Refresh</button>
+                </div>
+                <p class="muted">Interview schedules and meeting details shared by recruiters appear here.</p>
+                <div id="seekerInterviews"><p>Loading interviews...</p></div>
+            </div>
+
+        </section>
+
+        <!-- PHASE 13: SMART JOB RECOMMENDATIONS -->
+        <section id="smartJobsPage" class="hidden">
+            <div class="smart-match-header"><h1>Recommended Jobs</h1><p>Job matches calculated from your profile skills, experience and education.</p><button class="secondary-btn" onclick="loadSmartJobs()">Refresh</button></div>
+            <div id="smartJobsResults" class="smart-match-grid"><p>Loading recommendations...</p></div>
+        </section>
+
+        <!-- RECRUITER DASHBOARD -->
+
+        <section id="recruiterDashboard" class="hidden">
+
+            <h1>Recruiter Dashboard</h1>
+
+            <button onclick="showPostJob()">
+                + Post New Job
+            </button>
+
+            <button class="secondary-btn" onclick="loadRecruiterAnalytics()">
+                📊 Recruiter Analytics
+            </button>
+            <section id="recruiterAnalytics" class="analytics-panel hidden">
+                <div class="analytics-header"><h2>Recruiter Analytics</h2><button class="secondary-btn" onclick="loadRecruiterAnalytics()">Refresh</button></div>
+                <div id="recruiterAnalyticsStats" class="analytics-stats"><p>Loading analytics...</p></div>
+                <div class="analytics-section"><h3>Applications by Job</h3><div id="analyticsJobs"><p>Loading...</p></div></div>
+                <div class="analytics-section"><h3>Application Status</h3><div id="analyticsStatuses"><p>Loading...</p></div></div>
+                <div class="analytics-section"><h3>Monthly Applications</h3><div id="analyticsMonthly"><p>Loading...</p></div></div>
+            </section>
+            <div id="recruiterJobs"></div>
+
+        </section>
+
+        <!-- POST JOB PAGE -->
+
+        <section id="postJobPage" class="hidden">
+
+            <div class="form-card">
+
+                <h1>Post a Job</h1>
+
+                <form id="postJobForm">
+
+                    <input
+                        id="companyName"
+                        placeholder="Company name"
+                        required
+                    >
+
+                    <input
+                        id="jobTitle"
+                        placeholder="Job title"
+                        required
+                    >
+
+                    <input
+                        id="jobPostLocation"
+                        placeholder="Location"
+                        required
+                    >
+
+                    <select id="jobType" required>
+
+                        <option value="">Select job type</option>
+
+                        <option>Full-time</option>
+                        <option>Part-time</option>
+                        <option>Internship</option>
+                        <option>Contract</option>
+                        <option>Remote</option>
+
+                    </select>
+
+                    <input
+                        id="salary"
+                        placeholder="Salary (optional)"
+                    >
+
+                    <input
+                        id="skills"
+                        placeholder="Required skills (comma separated)"
+                    >
+
+                    <textarea
+                        id="jobDescription"
+                        placeholder="Job description"
+                        rows="6"
+                        required
+                    ></textarea>
+
+                    <button type="submit">
+                        Publish Job
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+        <!-- ===================================
+     USER PROFILE PAGE
+=================================== -->
+
+<section id="profilePage" class="hidden">
+
+    <div class="profile-page">
+
+        <h1>My Professional Profile</h1>
+        <p>Manage your professional information and resume.</p>
+
+        <div class="profile-completion-card">
+            <h3>Profile Completion</h3>
+
+            <div class="progress-track">
+                <div id="profileProgressBar" class="progress-fill"></div>
+            </div>
+
+            <p id="profileProgressText">0% Complete</p>
+        </div>
+
+        <form id="profileForm">
+
+            <div class="profile-form-grid">
+
+                <div class="form-group">
+                    <label for="profileFullName">Full Name</label>
+                    <input
+                        type="text"
+                        id="profileFullName"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="profileEmail">Email</label>
+                    <input
+                        type="email"
+                        id="profileEmail"
+                        readonly
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="profilePhone">Phone</label>
+                    <input
+                        type="tel"
+                        id="profilePhone"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="profileEducation">Education</label>
+                    <input
+                        type="text"
+                        id="profileEducation"
+                        placeholder="Degree, college or course"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="profileGraduationYear">Graduation Year</label>
+                    <input
+                        type="text"
+                        id="profileGraduationYear"
+                        placeholder="2027"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="profileSkills">Skills</label>
+                    <input
+                        type="text"
+                        id="profileSkills"
+                        placeholder="Python, Java, HTML, SQL"
+                    >
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="profileSummary">Professional Summary</label>
+
+                <textarea
+                    id="profileSummary"
+                    rows="5"
+                    placeholder="Write a short introduction about yourself..."
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="profileExperience">Experience</label>
+
+                <textarea
+                    id="profileExperience"
+                    rows="5"
+                    placeholder="Describe your experience, internship, projects, or write Fresher..."
+                ></textarea>
+            </div>
+
+            <button type="submit" id="saveProfileBtn">
+                Save Profile
+            </button>
+
+        </form>
+
+        <!-- RESUME SECTION -->
+
+        <div class="resume-card">
+
+            <h2>Resume Management</h2>
+
+            <p>Upload your resume in PDF, DOC or DOCX format.</p>
+
+            <form id="resumeForm">
+
+                <input
+                    type="file"
+                    id="resumeFile"
+                    accept=".pdf,.doc,.docx"
+                    required
+                >
+
+                <button type="submit">
+                    Upload Resume
+                </button>
+
+            </form>
+
+            <p id="resumeMessage"></p>
+
+            <div id="resumeLinkContainer"></div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- SAVED JOBS PAGE -->
+<section id="savedJobsPage" class="hidden">
+
+    <div class="saved-jobs-header">
+        <h1>My Saved Jobs</h1>
+        <p>Your bookmarked jobs are here. Apply when you're ready.</p>
+    </div>
+
+    <div id="savedJobsList" class="job-grid">
+        <p>Loading saved jobs...</p>
+    </div>
+
+    <button class="secondary-btn" onclick="showJobs()">
+        Browse More Jobs
+    </button>
+
+</section>
+
+
+
+
+        <!-- RECRUITER CANDIDATE PROFILE MODAL -->
+        <section id="candidateProfileModal" class="candidate-profile-modal hidden" role="dialog" aria-modal="true" aria-labelledby="candidateProfileTitle">
+            <div class="candidate-profile-modal-card">
+                <div class="candidate-profile-modal-header"><h2 id="candidateProfileTitle">Candidate Profile</h2><button type="button" class="secondary-btn" onclick="closeCandidateProfile()">Close</button></div>
+                <div id="candidateProfileContent"><p>Loading profile...</p></div>
+            </div>
+        </section>
+
+
+        <!-- PHASE 4 ADMIN PANEL -->
+
+        <!-- PHASE 12 RECRUITMENT PIPELINE -->
+        <!-- PHASE 13: SMART CANDIDATE MATCHING -->
+        <section id="smartCandidatesPage" class="hidden">
+            <div class="smart-match-header"><h1>Smart Candidates</h1><p>Rank seekers against a job you own. Scores are rule-based, not AI predictions.</p></div>
+            <label for="smartCandidateJob">Select your job</label><select id="smartCandidateJob"><option value="">Select a job</option></select>
+            <button onclick="loadSmartCandidates()">Find Matches</button>
+            <div id="smartCandidateResults" class="smart-match-grid"><p>Select a job to rank candidates.</p></div>
+        </section>
+
+        <!-- PHASE 14: CAREER INTELLIGENCE -->
+        <section id="careerIntelligencePage" class="hidden">
+            <div class="career-intel-header"><div><h1>Career Intelligence</h1><p>Profile-based recommendations and skill development insights.</p></div><button class="secondary-btn" onclick="loadCareerIntelligence()">Refresh Analysis</button></div>
+            <div id="careerIntelSummary" class="career-intel-summary"><p>Loading your career analysis...</p></div>
+            <section class="career-intel-section"><h2>Recommended Jobs</h2><div id="careerIntelJobs" class="smart-match-grid"><p>Loading recommendations...</p></div></section>
+            <section class="career-intel-section"><h2>Skill Gap Roadmap</h2><div id="careerIntelRoadmap" class="career-roadmap"><p>Loading skill roadmap...</p></div></section>
+        </section>
+
+
+        <section id="recruiterPipelinePage" class="hidden">
+            <div class="pipeline-header"><div><h1>Recruitment Pipeline</h1><p>Manage every applicant across your jobs from one place.</p></div><button class="secondary-btn" onclick="loadRecruiterPipeline()">Refresh</button></div>
+            <div class="pipeline-filters"><input id="pipelineSearch" placeholder="Search candidate, email, job, skill" oninput="loadRecruiterPipeline()"><select id="pipelineJobFilter" onchange="loadRecruiterPipeline()"><option value="">All jobs</option></select><select id="pipelineStatusFilter" onchange="loadRecruiterPipeline()"><option value="">All stages</option><option>Applied</option><option>Shortlisted</option><option>Interview</option><option>Selected</option><option>Hired</option><option>Rejected</option></select></div>
+            <div id="pipelineSummary" class="pipeline-summary"></div><div id="pipelineBoard" class="pipeline-board"><p>Loading pipeline...</p></div>
+        </section>
+
+        <section id="candidateSearchPage" class="hidden">
+            <div class="candidate-header"><div><h1>Candidate Search</h1><p>Discover job seekers by name, skills and education.</p></div><button class="secondary-btn" onclick="showRecruiterShortlist()">My Shortlist</button></div>
+            <div class="search-box candidate-filters"><input id="candidateSearchInput" placeholder="Name, skills or profile keyword"><input id="candidateSkillFilter" placeholder="Skill (e.g. JavaScript)"><input id="candidateEducationFilter" placeholder="Education (e.g. BCA)"><button onclick="searchCandidates()">Search Candidates</button><button class="secondary-btn" onclick="resetCandidateSearch()">Reset</button></div>
+            <p id="candidateResultsInfo" class="job-results-info"></p><div id="candidateResults" class="candidate-grid"></div>
+        </section>
+        <section id="recruiterShortlistPage" class="hidden"><div class="candidate-header"><h1>My Shortlist</h1><button class="secondary-btn" onclick="showCandidateSearch()">Back to Search</button></div><div id="shortlistResults" class="candidate-grid"></div></section>
+        
+        <!-- PHASE 9: INTERVIEW MANAGEMENT -->
+        <section id="interviewsPage" class="hidden">
+            <div class="candidate-header"><div><h1>Interview Management</h1><p>Schedule and track interviews for candidates who applied to your jobs.</p></div><button class="secondary-btn" onclick="loadRecruiterInterviews()">Refresh</button></div>
+            <div class="interview-panel"><h2>Schedule an Interview</h2><form id="interviewForm" class="interview-form" onsubmit="scheduleInterview(event)"><label>Candidate / Application<select id="interviewApplication" required><option value="">Loading applications...</option></select></label><label>Date &amp; Time<input id="interviewDateTime" type="datetime-local" required></label><label>Interview Type<select id="interviewType"><option>Online</option><option>Phone</option><option>In-person</option></select></label><label>Meeting Link (optional)<input id="interviewMeetingLink" type="url" placeholder="https://..." /></label><label>Notes<textarea id="interviewNotes" rows="3" placeholder="Interview agenda or notes"></textarea></label><button type="submit">Schedule Interview</button></form></div>
+            <div class="interview-panel"><h2>Scheduled Interviews</h2><div id="interviewList"><p>Loading interviews...</p></div></div>
+        </section>
+
+        <section id="adminPage" class="hidden">
+            <div class="admin-heading"><div><h1>Admin Panel</h1><p>Manage users, jobs and platform activity.</p></div><button class="secondary-btn" onclick="loadAdminPanel()">Refresh</button></div>
+            <div class="admin-stats-grid" id="adminStats"><p>Loading platform statistics...</p></div>
+            <div class="admin-section"><h2>Users</h2><div id="adminUsers"><p>Loading users...</p></div></div>
+            <div class="admin-section"><h2>Jobs</h2><div id="adminJobs"><p>Loading jobs...</p></div></div>
+        </section>
+
+        <!-- PHASE 3 - NOTIFICATIONS PAGE -->
+        <section id="notificationsPage" class="hidden">
+            <div class="notifications-header">
+                <div><h1>Notifications</h1><p>Application updates and activity on your SmartHire account.</p></div>
+                <button class="secondary-btn" onclick="markAllNotificationsRead()">Mark All as Read</button>
+            </div>
+            <div id="notificationsList" class="notifications-list"><p>Loading notifications...</p></div>
+            <button class="secondary-btn" onclick="showHome()">Back to Home</button>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>SmartHire | Job Portal Project</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>
